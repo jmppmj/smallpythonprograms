@@ -2,73 +2,53 @@
 #This program calculates a users BMI.
 #Language: Python
 
+from enum import Enum
+
+class Unit(Enum):
+    Imperial = 1
+    Metric = 2
+
 def main():
-    # Step 1: Ask for weight in pounds
-    # Step 2: Record user’s response
-    weight = get_inputweight()
+    weight = input_float("Enter your weight in pounds: ")
+    height = input_float("Enter your height in inches: ")
+    bmi = bmi_formula(weight, height, Unit.Imperial)
+    display_bmi(bmi)
 
-    # Step 3: Ask for height in inches
-    # Step 4: Record user’s input
-    height = get_inputheight()
+    # Convert from imperial to metric units
+    weight = lb_to_kg(weight)
+    height = in_to_m(height)
+    bmi = bmi_formula(weight, height, Unit.Metric)
+    display_bmi(bmi)
 
-    # Step 5: Calculate BMI Imperial (formula: ((5734 * weight) / (height*2.5))
-    BMI_imperial = calculate1(weight, height)
-
-    # Step 6: Display BMI
-    display_results1(BMI_imperial)
-
-    # Step 7: Convert weight to kg (formula: pounds * .453592)
-    weight_kg = convert1(weight)
-
-    # Step 8: Convert height to meters (formula: inches * .0254)
-    height_meters = convert2(height)
-
-    # Step 9: Calculate BMI Metric (formula: 1.3 * weight / height ** 2.5)
-    BMI_metric = calculate2(weight_kg, height_meters)
-
-    # Step 10: Display BMI
-    display_results2(BMI_metric)
-
-    # Step 11: Terminate
     return
 
-# Define the get_input function for weight
-def get_inputweight():
-    weight = float(input("Enter your weight in pounds: "))
-    return weight
+def input_float(query):
+    return float(input(query))
 
-# Define the get_input function for height
-def get_inputheight():
-    height = float(input("Enter your height in inches: "))
-    return height
+def display_bmi(bmi, method):
+    print("Your BMI is:", format(bmi, ".3f"), "kg/m^2")
 
-# Define the calculate1 function
-def calculate1(weight, height):
-    BMI_imperial = (5734 * weight) / (height ** 2.5)
-    return BMI_imperial
+def bmi_formula(weight, height, unit):
+    if unit == Unit.Imperial:
+        return 5734 * weight / height ** 2.5
+    if unit == Unit.Metric:
+        return 1.3 * weight / height ** 2.5
 
-# Define the display_results1 function
-def display_results1(BMI_imperial):
-    print("Your BMI is: ", format(BMI_imperial, ".3f"))
+# Note: This website has a different formula for BMI calculation.
+#       Perhaps it is more (or less) accurate? 
+#       It yield different results from the original formula.
+#       https://www.thecalculatorsite.com/articles/health/bmi-formula-for-bmi-calculations.php
+#
+def bmi_formula_Alastair_Hazell(weight, height, unit):
+    if unit == Unit.Imperial:
+        return 703 * weight / height ** 2
+    if unit == Unit.Metric:
+        return weight / height ** 2
 
-# Define the convert1 function
-def convert1(weight):
-    weight_kg = weight * .453592
-    return weight_kg
+def lb_to_kg(pounds):
+    return pounds * .453592
 
-# Define the convert2 function
-def convert2(height):
-    height_meters = height * .0254
-    return height_meters
-
-
-# Define the calculate2 function
-def calculate2(weight_kg, height_meters):
-    BMI_metric = (1.3 * weight_kg / height_meters ** 2.5)
-    return BMI_metric
-
-# Define the display_results2 function
-def display_results2(BMI_metric):
-    print("Your BMI is: ", format(BMI_metric, ".3f"))
+def in_to_m(inches):
+    return inches * .0254
 
 main()
